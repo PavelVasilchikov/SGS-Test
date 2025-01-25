@@ -1,7 +1,9 @@
+using SGS_Server.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
-
+builder.Services.AddHttpClient<CurrencyService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
