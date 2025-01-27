@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсы валют</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Курсы валют</h1>
+
+    <p>размер страницы</p>
+    <input style="display: block" id="pageSize" value="1" min="1" type="number" />
+    <br />
+
+    <p>Страница: <span id="pageNumber" ></span></p>
+
+
+    <button id="prevPage">предыдущая страница</button>
+    <button id="nextPage">следующая страница</button>
+
+    <div id="currencies-container"></div>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            let currentPage = 1;
+            let currentValutesOnPage = 0;
+            let currentValutesOnPageSize;
+
+            let pageSize = document.getElementById('pageSize').value;
+            document.getElementById("pageNumber").innerHTML = currentPage;
+
+            function loadCurrencies(page, pageSize) {
+                $.ajax({
+                    url: `https://localhost:7259/CurrencyList/currencies?page=${page}&pageSize=${pageSize}`,
+                    type: 'GET',
+                    success: function (data) {
+                        displayCurrencies(data);
+
+                    },
+                    error: function () {
+                        $('#currencies-container').html('<p>Ошибка при загрузке данных.</p>');
+                    }
+                });
+            }
+
+
+            function displayCurrencies(currencies) {
+                let html = '<ul>';
+                currentValutesOnPage = 0;
+                currencies.forEach(currency => {
+                    html += `<li>${currency.numCode} - ${currency.charCode} - ${currency.nominal} - ${currency.name} - ${currency.value} - ${currency.previous} </li>`;
+                    currentValutesOnPage++;
+                });
+                html += '</ul>';
+
+                $('#currencies-container').html(html);
+            }
+
+
+            $('#nextPage').on('click', function () {
+                if (currentValutesOnPageSize == currentValutesOnPage) {
+                    currentPage++;
+                }
+
+                 loadCurrencies(currentPage, document.getElementById('pageSize').value); document.getElementById("pageNumber").innerHTML = currentPage
+            });
+
+
+            
+            $('#prevPage').on('click', function () { if (currentPage != 1) { currentPage-- }; loadCurrencies(currentPage, document.getElementById('pageSize').value); document.getElementById("pageNumber").innerHTML = currentPage });
+            
+
+            $('#pageSize').on('change', function () {
+                loadCurrencies(currentPage, document.getElementById('pageSize').value);
+                document.getElementById("pageNumber").innerHTML = currentPage;
+                currentValutesOnPageSize = document.getElementById('pageSize').value;
+            });
+
+            $("[type='number']").keypress(function (evt) {
+                evt.preventDefault();
+            });
+
+            loadCurrencies(currentPage, pageSize);
+        });
+    </script>
+
+</body>
+</html>
