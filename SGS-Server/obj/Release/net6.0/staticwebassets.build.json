@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "s6Xj/N0K4v7wPJspqa73OqYFqcgJA98BFnR91OWacjU=",
+  "Source": "SGS-Server",
+  "BasePath": "_content/SGS-Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
