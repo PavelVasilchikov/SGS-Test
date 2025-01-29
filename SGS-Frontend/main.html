@@ -1,93 +1,62 @@
-﻿<!DOCTYPE html>
+﻿    <!DOCTYPE html>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Курсы валют</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <h1>Курсы валют</h1>
-
-    <p>размер страницы</p>
-    <input style="display: block" id="pageSize" value="1" min="1" type="number" />
-    <br />
-
-    <p>Страница: <span id="pageNumber" ></span></p>
+    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Курсы валют</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="GetPagesScript.js"></script>
+        <script src="GetCharCodeScript.js"></script>
+        <link rel="stylesheet" type="text/css" href="./Styles/Styles.css">
+    </head>
+    <body>
+        <h1>Курсы валют</h1>
 
 
-    <button id="prevPage">предыдущая страница</button>
-    <button id="nextPage">следующая страница</button>
+        <br />
+        <p>Поиск по символьному коду</p>
+        <input type="text" name="charCodeSearch" value="" id="charCodeSearchId" />
+        <div id="charCodeSearchResult">
+            <table id="currencySearchTable">
+                <thead>
+                    <tr>
+                        <th>Цифровой код</th>
+                        <th>Cимвольный код</th>
+                        <th>Номинал</th>
+                        <th>Название</th>
+                        <th>Цена</th>
+                        <th>Предыдущая цена</th>
+                    </tr>
+                </thead>
+                <tbody id="currencySearchList"></tbody>
+            </table>
+        </div>
 
-    <div id="currencies-container"></div>
+        <p>Размер страницы</p>
+        <input style="display: block" id="pageSize" value="1" min="1" max="43" type="number" />
 
-
-
-
-    <script>
-        $(document).ready(function () {
-            let currentPage = 1;
-            let currentValutesOnPage = 0;
-            let currentValutesOnPageSize;
-
-            let pageSize = document.getElementById('pageSize').value;
-            document.getElementById("pageNumber").innerHTML = currentPage;
-
-            function loadCurrencies(page, pageSize) {
-                $.ajax({
-                    url: `https://localhost:7259/CurrencyList/currencies?page=${page}&pageSize=${pageSize}`,
-                    type: 'GET',
-                    success: function (data) {
-                        displayCurrencies(data);
-
-                    },
-                    error: function () {
-                        $('#currencies-container').html('<p>Ошибка при загрузке данных.</p>');
-                    }
-                });
-            }
+        <p>Страница: <span id="pageNumber"></span></p>
 
 
-            function displayCurrencies(currencies) {
-                let html = '<ul>';
-                currentValutesOnPage = 0;
-                currencies.forEach(currency => {
-                    html += `<li>${currency.numCode} - ${currency.charCode} - ${currency.nominal} - ${currency.name} - ${currency.value} - ${currency.previous} </li>`;
-                    currentValutesOnPage++;
-                });
-                html += '</ul>';
+        <button id="prevPage">предыдущая страница</button>
+        <button id="nextPage">следующая страница</button>
 
-                $('#currencies-container').html(html);
-            }
-
-
-            $('#nextPage').on('click', function () {
-                if (currentValutesOnPageSize == currentValutesOnPage) {
-                    currentPage++;
-                }
-
-                 loadCurrencies(currentPage, document.getElementById('pageSize').value); document.getElementById("pageNumber").innerHTML = currentPage
-            });
-
-
-            
-            $('#prevPage').on('click', function () { if (currentPage != 1) { currentPage-- }; loadCurrencies(currentPage, document.getElementById('pageSize').value); document.getElementById("pageNumber").innerHTML = currentPage });
-            
-
-            $('#pageSize').on('change', function () {
-                loadCurrencies(currentPage, document.getElementById('pageSize').value);
-                document.getElementById("pageNumber").innerHTML = currentPage;
-                currentValutesOnPageSize = document.getElementById('pageSize').value;
-            });
-
-            $("[type='number']").keypress(function (evt) {
-                evt.preventDefault();
-            });
-
-            loadCurrencies(currentPage, pageSize);
-        });
-    </script>
-
-</body>
-</html>
+        <div id="currencies-container">
+            <h2>Список валют</h2>
+            <table id="currencyTable">
+                <thead>
+                    <tr>
+                        <th>Цифровой код</th>
+                        <th>Cимвольный код</th>
+                        <th>Номинал</th>
+                        <th>Название</th>
+                        <th>Цена</th>
+                        <th>Предыдущая цена</th>
+                    </tr>
+                </thead>
+                <tbody id="currencyList"></tbody>
+            </table>
+        </div>
+    </body>
+    </html>
