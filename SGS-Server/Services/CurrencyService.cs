@@ -21,13 +21,15 @@ namespace SGS_Server.Services
             return data.Valute.Values.Skip(start).Take(count).ToList();
         }
 
-        public async Task<Currency> GetCurrencyAsync(string charCode)
+        public async Task<List<Currency>> GetCurrencyAsync(string charCode)
         {
             var response = await _httpClient.GetStringAsync("https://www.cbr-xml-daily.ru/daily_json.js");
             var data = JsonSerializer.Deserialize<RootObject>(response);
 
-            
-            return data.Valute.Values.FirstOrDefault(c => c.CharCode.Equals(charCode, StringComparison.OrdinalIgnoreCase));
+
+            return data.Valute.Values
+                .Where(c => c.CharCode.Contains(charCode, StringComparison.OrdinalIgnoreCase))
+                .ToList(); 
         }
     }
 }
